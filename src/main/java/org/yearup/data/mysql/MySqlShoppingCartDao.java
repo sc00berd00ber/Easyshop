@@ -18,7 +18,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public List<ShoppingCartItem> getCartByUserId(int userId) {
+    public List<ShoppingCartItem> getByUserId(int userId) {
         List<ShoppingCartItem> items = new ArrayList<>();
         String sql = "SELECT sc.product_id, sc.quantity, p.name, p.price, p.category_id, p.description, p.color, p.stock, p.featured, p.image_url " +
                 "FROM shopping_cart sc " +
@@ -53,7 +53,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public void addProductToCart(int userId, int productId) {
+    public void addToCart(int userId, int productId) {
         // Check if product is already in the cart
         String checkSql = "SELECT quantity FROM shopping_cart WHERE user_id = ? AND product_id = ?";
 
@@ -89,7 +89,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public void updateProductQuantity(int userId, int productId, int quantity) {
+    public void updateQuantity(int userId, int productId, int quantity) {
         String sql = "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

@@ -1,11 +1,8 @@
 package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import org.yearup.data.ProductDao;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.data.UserDao;
 import org.yearup.models.ShoppingCart;
@@ -14,90 +11,60 @@ import org.yearup.models.User;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cart")
-@PreAuthorize("isAuthenticated()")
 @CrossOrigin
-public class ShoppingCartController
-{
-    private ShoppingCartDao shoppingCartDao;
-    private UserDao userDao;
-    private ProductDao productDao;
+public class ShoppingCartController {
+
+    private final UserDao userDao;
+    private final ShoppingCartDao shoppingCartDao;
 
     @Autowired
-    public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao)
-    {
-        this.shoppingCartDao = shoppingCartDao;
+    public ShoppingCartController(UserDao userDao, ShoppingCartDao shoppingCartDao) {
         this.userDao = userDao;
-        this.productDao = productDao;
+        this.shoppingCartDao = shoppingCartDao;
     }
 
     @GetMapping
-    public ShoppingCart getCart(Principal principal)
-    {
-        try
-        {
-            String userName = principal.getName();
-            User user = userDao.getByUserName(userName);
-            int userId = user.getId();
-
-            List<ShoppingCartItem> items = shoppingCartDao.getByUserId(user.getId());
-            return new ShoppingCart(items);        }
-        catch(Exception e)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ShoppingCart getCart(Principal principal) {
+        String username = principal.getName();
+        // Use the correct method name
+        User user = userDao.getByUserName(username);
+        List<ShoppingCartItem> items = shoppingCartDao.getByUserId(user.getId());
+        return new ShoppingCart(items);
     }
 
     @PostMapping("/products/{productId}")
-    public void addToCart(@PathVariable int productId, Principal principal)
-    {
-        try
-        {
-            String userName = principal.getName();
-            User user = userDao.getByUserName(userName);
-            int userId = user.getId();
+    @PreAuthorize("hasRole('ROLE_USER')")
 
-            shoppingCartDao.addToCart(userId, productId);
-        }
-        catch(Exception e)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+    public ShoppingCart addProductToCart(@PathVariable int productId, Principal principal) {
+        String username = principal.getName();
+        int userId = userDao.getIdByUsername(username);
+        shoppingCartDao.addToCart(userId, productId);
+        return new ShoppingCart(shoppingCartDao.getByUserId(userId));
     }
 
     @PutMapping("/products/{productId}")
-    public void updateCartItem(@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal)
-    {
-        try
-        {
-            String userName = principal.getName();
-            User user = userDao.getByUserName(userName);
-            int userId = user.getId();
+    @PreAuthorize("hasRole('ROLE_USER')")
 
-            shoppingCartDao.updateQuantity(userId, productId, item.getQuantity());
-        }
-        catch(Exception e)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+    public void updateProductQuantity(@PathVariable int productId, @RequestBody Map<String, Integer> body, Principal principal) {
+        int quantity = body.get("quantity");
+        String username = principal.getName();
+        int userId = userDao.getIdByUsername(username);
+        shoppingCartDao.updateQuantity(userId, productId, quantity);
     }
 
-    @DeleteMapping("")
-    public void clearCart(Principal principal)
-    {
-        try
-        {
-            String userName = principal.getName();
-            User user = userDao.getByUserName(userName);
-            int userId = user.getId();
+    @DeleteMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
 
-            shoppingCartDao.clearCart(userId);
-        }
-        catch(Exception e)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+    public ShoppingCart clearCart(Principal principal) {
+        String username = principal.getName();
+        int userId = userDao.getIdByUsername(username);
+        shoppingCartDao.clearCart(userId);
+        return new ShoppingCart(shoppingCartDao.getByUserId(userId));
     }
+
 }
