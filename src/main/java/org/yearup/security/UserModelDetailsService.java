@@ -1,6 +1,7 @@
 package org.yearup.security;
 
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.yearup.data.UserDao;
 import org.yearup.models.User;
 import org.slf4j.Logger;
@@ -31,9 +32,21 @@ public class UserModelDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating user '{}'", login);
+
+        if (login == null) {
+            throw new UsernameNotFoundException("Username cannot be null");
+        }
+
         String lowercaseLogin = login.toLowerCase();
-        return createSpringSecurityUser(lowercaseLogin, userDao.getByUserName(lowercaseLogin));
+        User user = userDao.getByUserName(lowercaseLogin);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + lowercaseLogin);
+        }
+
+        return createSpringSecurityUser(lowercaseLogin, user);
     }
+
 
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {
         if (!user.isActivated()) {
