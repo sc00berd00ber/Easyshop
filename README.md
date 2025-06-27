@@ -1,3 +1,7 @@
+<div align="center">
+<img src="https://github.com/user-attachments/assets/5a0a82cc-884a-47bd-8588-d942a8b26504" alt="Description" width="500" height="300">
+</div>
+
 # E-Commerce Spring Boot Application
 
 A full-stack e-commerce web application backend built using **Spring Boot**. It supports user authentication, shopping cart management, user profiles, product browsing, and admin-level category and product management.
