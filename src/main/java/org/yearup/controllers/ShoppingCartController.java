@@ -66,4 +66,5 @@ public class ShoppingCartController {
         shoppingCartDao.clearCart(userId);
         return new ShoppingCart(shoppingCartDao.getByUserId(userId));
     }
+
 }
