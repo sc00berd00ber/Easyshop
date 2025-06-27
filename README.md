@@ -6,15 +6,6 @@
 
 A full-stack e-commerce web application backend built using **Spring Boot**. It supports user authentication, shopping cart management, user profiles, product browsing, and admin-level category and product management.
 
-## 🔧 Technologies Used
-
-- Java 17+
-- Spring Boot
-- Spring Security (JWT-based)
-- JDBC with MySQL
-- Maven
-- RESTful APIs
-
 ## 📦 Features
 
 ### 🛒 User Functionality
