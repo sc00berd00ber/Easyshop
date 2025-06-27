@@ -55,7 +55,31 @@ A full-stack e-commerce web application backend built using **Spring Boot**. It 
 - `GET /profile` - View user profile
 - `PUT /profile` - Update user profile
 
-## Screenshots
+## 📌 Highlighted Code: updateProfile in ProfileController
+``` java
+@PutMapping
+public void updateProfile(@RequestBody Profile profile, Principal principal) {
+    String username = principal.getName();
+    User user = userDao.getByUserName(username);
+    if (user == null) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
+    }
+
+    profile.setUserId(user.getId());
+    profileDao.update(profile);
+}
+```
+## 💡 Why This Is Interesting
+Security-first design:
+It pulls the userId from the authenticated user’s token (via Principal) instead of trusting the client to send it — reducing risk of privilege escalation.
+
+Clear and maintainable:
+The method is short, expressive, and easy to understand. It checks the user, associates the correct userId, and updates the profile.
+
+Reusability:
+This method depends on injected DAO interfaces (UserDao, ProfileDao) — making it clean and testable.
+
+## 📱Screenshots
 
 ### Home Page
 ![Screenshot 2025-06-26 115856](https://github.com/user-attachments/assets/18384d92-71bb-42c4-8dab-ab5c67cd4f0f)
