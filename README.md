@@ -55,7 +55,7 @@ A full-stack e-commerce web application backend built using **Spring Boot**. It 
 - `GET /profile` - View user profile
 - `PUT /profile` - Update user profile
 
-## 📌 Highlighted Code: updateProfile in ProfileController
+## 📌 Interesting Code
 ``` java
 @PutMapping
 public void updateProfile(@RequestBody Profile profile, Principal principal) {
