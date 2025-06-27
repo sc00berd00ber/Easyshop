@@ -55,3 +55,19 @@ A full-stack e-commerce web application backend built using **Spring Boot**. It 
 - `GET /profile` - View user profile
 - `PUT /profile` - Update user profile
 
+## Screenshots
+
+#### Home Page
+![Screenshot 2025-06-26 115856](https://github.com/user-attachments/assets/18384d92-71bb-42c4-8dab-ab5c67cd4f0f)
+
+#### Cart
+![Screenshot 2025-06-26 115958](https://github.com/user-attachments/assets/5206044d-1e93-469f-8c24-c3536da8eca7)
+
+#### Login Page
+![Screenshot 2025-06-26 120718](https://github.com/user-attachments/assets/ab2cdc3a-4b9c-431e-a76b-3d11a3584982)
+
+#### Profile
+![Screenshot 2025-06-26 120048](https://github.com/user-attachments/assets/47174c82-92e6-4ce7-abb2-3ad13317395a)
+
+#### Postman Tests
+![Screenshot 2025-06-26 152420](https://github.com/user-attachments/assets/0f941274-e62f-4d16-a80d-ba51af46cfc5)
